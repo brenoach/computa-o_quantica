@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computação Quântica | Demonstração Interativa & Simulador</title>
+  <meta name="description" content="Portal interativo de computação quântica: superposição, emaranhamento, esfera de Bloch 3D, portas lógicas e simulação do circuito de Bell em tempo real.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas de fundo quântico -->
+  <canvas id="quantum-bg-canvas"></canvas>
+
+  <!-- Barra de Navegação -->
+  <header class="navbar" id="top-navbar">
+    <div class="nav-container">
+      <a href="#hero" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" fill="#00f0ff" />
+            <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#00f0ff" />
+            <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#a855f7" transform="rotate(60 12 12)" />
+            <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#3b82f6" transform="rotate(120 12 12)" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">QuantumCore</span>
+          <span class="brand-badge">Fatec ADS · Grupo 4</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#fundamentos">Fundamentos</a>
+        <a href="#qubit">Qubit</a>
+        <a href="#bloch">Esfera de Bloch</a>
+        <a href="#emaranhamento">Emaranhamento</a>
+        <a href="#portas">Portas</a>
+        <a href="#circuito-bell" class="nav-highlight">Circuito de Bell</a>
+        <a href="#laboratorio">Sandbox</a>
+        <a href="#arquitetura">Arquitetura</a>
+        <a href="#hardware">Hardware</a>
+      </nav>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+      <div class="hero-container">
+        <div class="academic-tag">
+          <span class="pulse-dot"></span>
+          Trabalho de Arquitetura e Organização de Computadores · Prof. Felipe C. Lourenço
+        </div>
+
+        <h1 class="hero-title">
+          A Revolução da <br>
+          <span class="gradient-text">Computação Quântica</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Explore a física da informação: superposição, emaranhamento quântico, matrizes unitárias
+          e a simulação passo a passo do <strong>Estado de Bell</strong> com portas <em>Hadamard</em> e <em>CNOT</em>.
+        </p>
+
+        <div class="hero-stats-grid">
+          <div class="stat-card">
+            <span class="stat-value">|ψ⟩ = α|0⟩ + β|1⟩</span>
+            <span class="stat-label">Princípio da Superposição</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value">2ⁿ Amplitudes</span>
+            <span class="stat-label">Espaço Exponencial com n Qubits</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value">(|00⟩ + |11⟩)/√2</span>
+            <span class="stat-label">Estado de Bell (Emaranhado)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value">~15 mK</span>
+            <span class="stat-label">Temperatura Criogênica de Operação</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#circuito-bell" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Simulador do Circuito de Bell
+          </a>
+          <a href="#bloch" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            Esfera de Bloch 3D
+          </a>
+          <a href="#laboratorio" class="btn btn-outline">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Sandbox Livre
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. FUNDAMENTOS E TIMELINE -->
+    <section id="fundamentos" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Origem & Evolução</span>
+        <h2 class="section-title">O Que é Computação Quântica?</h2>
+        <p class="section-description">
+          Diferente dos computadores clássicos baseados em transistores de silício operando em bits binários (0 ou 1),
+          os computadores quânticos utilizam as leis da <strong>Mecânica Quântica</strong> para processar informações
+          de maneira exponencialmente paralela.
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon cyan">⚛️</div>
+          <h3>Superposição</h3>
+          <p>
+            Um qubit não precisa escolher entre 0 e 1 antes de ser medido. Ele existe como uma combinação linear de ambos os estados com amplitudes de probabilidade contínuas.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon violet">🔗</div>
+          <h3>Emaranhamento</h3>
+          <p>
+            Dois ou mais qubits tornam-se correlacionados de tal forma que o estado quântico de um determina instantaneamente o outro, independente da distância física entre eles.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon emerald">🌊</div>
+          <h3>Interferência</h3>
+          <p>
+            As amplitudes de probabilidade quântica podem se somar (interferência construtiva) ou se anular (interferência destrutiva), amplificando a resposta correta de um problema.
+          </p>
+        </div>
+      </div>
+
+      <!-- Linha do Tempo -->
+      <div class="timeline-container">
+        <h3 class="timeline-title">Marcos Históricos da Computação Quântica</h3>
+        <div class="timeline-track">
+          <div class="timeline-item">
+            <div class="timeline-marker">1982</div>
+            <div class="timeline-content">
+              <h4>Richard Feynman</h4>
+              <p>Propõe que simular a física e a química da matéria exige computadores que operem com as próprias leis da mecânica quântica.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">1985</div>
+            <div class="timeline-content">
+              <h4>David Deutsch</h4>
+              <p>Descreve formalmente o primeiro modelo de computador quântico universal (a Máquina de Turing Quântica).</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">1994</div>
+            <div class="timeline-content">
+              <h4>Algoritmo de Shor</h4>
+              <p>Peter Shor desenvolve o algoritmo que fatora números inteiros em tempo polinomial, demonstrando ameaça direta à criptografia RSA e ECC.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">1996</div>
+            <div class="timeline-content">
+              <h4>Algoritmo de Grover</h4>
+              <p>Lov Grover cria o algoritmo de busca em bancos de dados não estruturados com aceleração quadrática de O(N) para O(√N).</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">2019</div>
+            <div class="timeline-content">
+              <h4>Supremacia Quântica (Google)</h4>
+              <p>O processador Sycamore de 53 qubits realiza em 200 segundos um cálculo que levaria milhares de anos no supercomputador clássico Summit.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">2024-2026</div>
+            <div class="timeline-content">
+              <h4>Era Pós-Quântica & QEC</h4>
+              <p>NIST homologa os primeiros padrões mundiais de criptografia pós-quântica (ML-KEM, ML-DSA). Avanços cruciais em correção de erros quânticos lógicos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. BIT CLÁSSICO VS QUBIT & SUPERPOSIÇÃO -->
+    <section id="qubit" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Fundamento da Informação</span>
+        <h2 class="section-title">Bit Clássico × Qubit</h2>
+        <p class="section-description">
+          O bit clássico é como um interruptor ou uma moeda já caída sobre a mesa.
+          O qubit é como a <strong>moeda girando no ar</strong>: tem potencial de ser cara ou coroa simultaneamente até o momento do impacto (medição).
+        </p>
+      </div>
+
+      <div class="comparison-dual-grid">
+        <!-- Cartão Bit Clássico -->
+        <div class="concept-card">
+          <div class="concept-header">
+            <span class="concept-tag classical">Clássico</span>
+            <h3>Bit Binário</h3>
+          </div>
+          <div class="bit-visual-box">
+            <div class="bit-lamp" id="classicalLamp">
+              <span id="classicalBitValue">0</span>
+            </div>
+            <div class="bit-controls">
+              <button class="btn-small" onclick="setClassicalBit(0)">Definir 0 (Desligado)</button>
+              <button class="btn-small" onclick="setClassicalBit(1)">Definir 1 (Ligado)</button>
+            </div>
+          </div>
+          <ul class="concept-list">
+            <li><strong>Valores:</strong> Estritamente 0 OU 1 em qualquer instante.</li>
+            <li><strong>Leitura:</strong> Não destrutiva (pode ser lido infinitas vezes sem alterar o estado).</li>
+            <li><strong>Capacidade de n bits:</strong> Representa exatamente <em>um único valor</em> dentre os 2ⁿ possíveis.</li>
+            <li><strong>Hardware:</strong> Transistores MOSFET mantendo tensão alta (3.3V/5V) ou baixa (0V).</li>
+          </ul>
+        </div>
+
+        <!-- Cartão Qubit -->
+        <div class="concept-card quantum-border">
+          <div class="concept-header">
+            <span class="concept-tag quantum">Quântico</span>
+            <h3>Qubit (Quantum Bit)</h3>
+          </div>
+          <div class="qubit-visual-box">
+            <div class="coin-simulation">
+              <div class="quantum-coin" id="quantumCoin">
+                <div class="coin-side coin-front">|0⟩</div>
+                <div class="coin-side coin-back">|1⟩</div>
+              </div>
+            </div>
+            <div class="coin-status">
+              <span id="qubitStateText">Superposição: (|0⟩ + |1⟩)/√2</span>
+            </div>
+            <div class="bit-controls">
+              <button class="btn-small btn-primary" id="btnSpinCoin">Girar Moeda (Superposição)</button>
+              <button class="btn-small btn-secondary" id="btnMeasureCoin">Medir Qubit (Colapso)</button>
+            </div>
+          </div>
+          <ul class="concept-list">
+            <li><strong>Fórmula:</strong> |ψ⟩ = α|0⟩ + β|1⟩, onde α e β são números complexos.</li>
+            <li><strong>Normalização:</strong> |α|² + |β|² = 1 (a soma de todas as probabilidades é 100%).</li>
+            <li><strong>Regra de Born:</strong> A medição colapsa o estado para |0⟩ com prob. |α|² e para |1⟩ com prob. |β|².</li>
+            <li><strong>Capacidade de n qubits:</strong> Mantém uma superposição de <em>todos os 2ⁿ estados simultaneamente</em>!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Ajuste Interativo de Superposição -->
+      <div class="interactive-slider-box">
+        <h3>Simule a Amplitude do Qubit (|ψ⟩ = α|0⟩ + β|1⟩)</h3>
+        <p>Arraste para alterar a probabilidade intrínseca de encontrar |0⟩ ou |1⟩ ao medir:</p>
+        <div class="slider-wrapper">
+          <label>Probabilidade de |0⟩: <strong id="lblProb0">50%</strong></label>
+          <input type="range" id="qubitProbSlider" min="0" max="100" value="50" class="quantum-slider">
+          <label>Probabilidade de |1⟩: <strong id="lblProb1">50%</strong></label>
+        </div>
+        <div class="probability-bar-dual">
+          <div class="prob-segment seg-0" id="barSeg0" style="width: 50%;">|0⟩: 50%</div>
+          <div class="prob-segment seg-1" id="barSeg1" style="width: 50%;">|1⟩: 50%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ESFERA DE BLOCH 3D -->
+    <section id="bloch" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Geometria Quântica</span>
+        <h2 class="section-title">Esfera de Bloch Interativa 3D</h2>
+        <p class="section-description">
+          A Esfera de Bloch é a representação geométrica oficial do estado puro de um único qubit no espaço tridimensional.
+          O Polo Norte representa o estado <strong>|0⟩</strong>, o Polo Sul representa <strong>|1⟩</strong>,
+          e todos os pontos na superfície esférica são superposições válidas.
+        </p>
+      </div>
+
+      <div class="bloch-main-grid">
+        <div class="bloch-viewport-wrapper">
+          <canvas id="blochCanvas" width="560" height="460"></canvas>
+          <div class="bloch-drag-hint">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+            Clique e arraste com o mouse para girar a esfera em 3D
+          </div>
+        </div>
+
+        <div class="bloch-controls-panel">
+          <h3>Estado Quântico Atual</h3>
+          <div class="state-vector-display">
+            <div class="math-formula" id="blochKetDisplay">|ψ⟩ = 0.7071 |0⟩ + 0.7071 |1⟩</div>
+            <div class="angle-details">
+              <span>Ângulo Polar θ = <strong id="blochThetaVal">90.0°</strong></span>
+              <span>Ângulo Azimutal φ = <strong id="blochPhiVal">0.0°</strong></span>
+            </div>
+          </div>
+
+          <div class="bloch-prob-meters">
+            <div class="meter-item">
+              <span>P(|0⟩) = |α|²:</span>
+              <div class="mini-bar-bg"><div class="mini-bar-fill cyan" id="blochBar0" style="width: 50%;"></div></div>
+              <strong id="blochPct0">50.0%</strong>
+            </div>
+            <div class="meter-item">
+              <span>P(|1⟩) = |β|²:</span>
+              <div class="mini-bar-bg"><div class="mini-bar-fill violet" id="blochBar1" style="width: 50%;"></div></div>
+              <strong id="blochPct1">50.0%</strong>
+            </div>
+          </div>
+
+          <h4>Aplicar Estados Notáveis (Presets)</h4>
+          <div class="preset-buttons-grid">
+            <button class="btn-gate" onclick="setBlochState(0, 0, '|0⟩ (Polo Norte)')">|0⟩</button>
+            <button class="btn-gate" onclick="setBlochState(Math.PI, 0, '|1⟩ (Polo Sul)')">|1⟩</button>
+            <button class="btn-gate" onclick="setBlochState(Math.PI/2, 0, '|+⟩ (Hadamard em |0⟩)')">|+⟩ = (|0⟩+|1⟩)/√2</button>
+            <button class="btn-gate" onclick="setBlochState(Math.PI/2, Math.PI, '|-⟩ (Hadamard em |1⟩)')">|-⟩ = (|0⟩-|1⟩)/√2</button>
+            <button class="btn-gate" onclick="setBlochState(Math.PI/2, Math.PI/2, '|+i⟩ (Fase Y+)')">|+i⟩</button>
+            <button class="btn-gate" onclick="setBlochState(Math.PI/2, 3*Math.PI/2, '|-i⟩ (Fase Y-)')">|-i⟩</button>
+          </div>
+
+          <h4>Aplicar Rotações / Portas Quânticas no Qubit</h4>
+          <div class="preset-buttons-grid">
+            <button class="btn-gate-action" onclick="applyBlochGate('X')">Porta X (NOT - Giro 180° no eixo X)</button>
+            <button class="btn-gate-action" onclick="applyBlochGate('Z')">Porta Z (Phase - Giro 180° no eixo Z)</button>
+            <button class="btn-gate-action" onclick="applyBlochGate('H')">Porta H (Hadamard - Diagonal X+Z)</button>
+            <button class="btn-gate-action" onclick="resetBlochSphere()">Reiniciar para |0⟩</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. EMARANHAMENTO QUÂNTICO -->
+    <section id="emaranhamento" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Fenômeno Fundamental</span>
+        <h2 class="section-title">Emaranhamento Quântico</h2>
+        <p class="section-description">
+          Chamado por Einstein de <em>"ação fantasmagórica à distância"</em>, o emaranhamento ocorre quando dois qubits
+          passam a compartilhar uma função de onda inseparável. Medir um deles define instantaneamente o outro!
+        </p>
+      </div>
+
+      <div class="entanglement-lab">
+        <div class="particles-connection-canvas-wrapper">
+          <canvas id="entanglementCanvas" width="900" height="260"></canvas>
+        </div>
+
+        <div class="entanglement-controls">
+          <div class="qubit-node-card left">
+            <span class="node-id">Qubit A (Laboratório Terra)</span>
+            <div class="node-state-badge" id="entangleNodeA">Em Superposição 🌀</div>
+            <button class="btn btn-primary btn-sm" id="btnMeasureA">Medir Qubit A</button>
+          </div>
+
+          <div class="entangle-beam-status">
+            <div class="beam-indicator active" id="beamIndicator">
+              <span class="pulse-line"></span>
+              <span class="beam-label">Canal de Correlação Quântica (|Φ⁺⟩ = (|00⟩+|11⟩)/√2)</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btnResetEntangle">Criar Novo Par Emaranhado</button>
+          </div>
+
+          <div class="qubit-node-card right">
+            <span class="node-id">Qubit B (Estação Espacial)</span>
+            <div class="node-state-badge" id="entangleNodeB">Em Superposição 🌀</div>
+            <button class="btn btn-primary btn-sm" id="btnMeasureB">Medir Qubit B</button>
+          </div>
+        </div>
+
+        <div class="entangle-callout-box">
+          <div class="callout-icon">💡</div>
+          <div class="callout-text">
+            <strong>O Teorema da Não-Comunicação:</strong>
+            Embora a correlação ocorra instantaneamente (mais rápido do que qualquer sinal luminoso),
+            nenhuma mensagem ou dado útil pode ser transmitido sozinho por meio do emaranhamento sem um canal clássico auxiliar.
+            Isso preserva rigorosamente a Teoria da Relatividade de Einstein!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PORTAS LÓGICAS QUÂNTICAS -->
+    <section id="portas" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Álgebra Linear & Operações</span>
+        <h2 class="section-title">Portas Lógicas Quânticas</h2>
+        <p class="section-description">
+          Diferente das portas clássicas (AND, OR, NOT) que podem perder informação térmica irreversivelmente,
+          as portas lógicas quânticas são representadas por <strong>matrizes unitárias complexas (U † U = I)</strong>,
+          sendo inerentemente reversíveis e conservando a probabilidade total igual a 1.
+        </p>
+      </div>
+
+      <div class="gates-catalog-grid">
+        <!-- Porta X -->
+        <div class="gate-detail-card" onclick="inspectGate('X')">
+          <div class="gate-badge x">X</div>
+          <div class="gate-info">
+            <h4>Pauli-X (NOT Quântico)</h4>
+            <p>Inverte o estado computacional: |0⟩ vira |1⟩ e |1⟩ vira |0⟩.</p>
+            <div class="matrix-preview">
+              [ 0  1 ]<br>
+              [ 1  0 ]
+            </div>
+          </div>
+        </div>
+
+        <!-- Porta Z -->
+        <div class="gate-detail-card" onclick="inspectGate('Z')">
+          <div class="gate-badge z">Z</div>
+          <div class="gate-info">
+            <h4>Pauli-Z (Inversor de Fase)</h4>
+            <p>Mantém |0⟩ intacto e inverte o sinal da fase de |1⟩ para -|1⟩.</p>
+            <div class="matrix-preview">
+              [ 1   0 ]<br>
+              [ 0  -1 ]
+            </div>
+          </div>
+        </div>
+
+        <!-- Porta H -->
+        <div class="gate-detail-card active-card" onclick="inspectGate('H')">
+          <div class="gate-badge h">H</div>
+          <div class="gate-info">
+            <h4>Hadamard (Cria Superposição)</h4>
+            <p>Mapeia a base padrão |0⟩ para ( |0⟩ + |1⟩ ) / √2. O coração do paralelismo quântico!</p>
+            <div class="matrix-preview">
+              (1/√2) · [ 1   1 ]<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ 1  -1 ]
+            </div>
+          </div>
+        </div>
+
+        <!-- Porta CNOT -->
+        <div class="gate-detail-card active-card" onclick="inspectGate('CNOT')">
+          <div class="gate-badge cnot">●─X</div>
+          <div class="gate-info">
+            <h4>CNOT (NOT Controlado - 2 Qubits)</h4>
+            <p>Se o qubit de controle for 1, inverte o alvo. Essencial para criar emaranhamento!</p>
+            <div class="matrix-preview">
+              [ 1 0 0 0 ]<br>
+              [ 0 1 0 0 ]<br>
+              [ 0 0 0 1 ]<br>
+              [ 0 0 1 0 ]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-inspector-box" id="gateInspectorBox">
+        <h3>Examinador Interativo de Portas</h3>
+        <p id="gateInspectorDesc">Clique em qualquer cartão de porta acima para visualizar sua transformação vetorial detalhada.</p>
+        <div class="inspector-equation" id="gateInspectorMath">
+          H |0⟩ = ( |0⟩ + |1⟩ ) / √2 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; H |1⟩ = ( |0⟩ - |1⟩ ) / √2
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. O SIMULADOR DO CIRCUITO DE BELL (FOCO DO GRUPO 4) -->
+    <section id="circuito-bell" class="section-container highlight-section">
+      <div class="section-header">
+        <span class="section-badge focus-badge">Núcleo do Trabalho do Grupo 4</span>
+        <h2 class="section-title">Simulador do Circuito de Bell</h2>
+        <p class="section-description">
+          Acompanhe passo a passo o circuito implementado pelo nosso grupo em Python (NumPy).
+          O circuito parte do estado <strong>|00⟩</strong>, aplica uma porta <strong>Hadamard (H)</strong> no primeiro qubit
+          e uma porta <strong>CNOT</strong> para gerar o estado maximamente emaranhado <strong>|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</strong>.
+        </p>
+      </div>
+
+      <!-- Diagrama do Circuito Interativo -->
+      <div class="circuit-board-container">
+        <div class="circuit-schematic">
+          <!-- Linha Q0 -->
+          <div class="circuit-wire-row">
+            <div class="wire-label">q₀: |0⟩</div>
+            <div class="wire-track" id="wireTrack0">
+              <div class="wire-line"></div>
+              <div class="gate-slot step-1-gate" id="gateHSlot">
+                <span class="gate-box h-gate">H</span>
+                <span class="gate-tooltip">Hadamard em q₀</span>
+              </div>
+              <div class="gate-slot step-2-gate" id="cnotCtrlSlot">
+                <span class="cnot-control-dot"></span>
+                <div class="cnot-vertical-line"></div>
+              </div>
+              <div class="gate-slot step-3-gate" id="measure0Slot">
+                <span class="gate-box m-gate">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12a10 10 0 0 1 20 0"/><line x1="12" y1="12" x2="16" y2="6"/></svg>
+                </span>
+                <span class="gate-tooltip">Medidor M</span>
+              </div>
+            </div>
+            <div class="wire-output" id="outputWire0">Colapso: ?</div>
+          </div>
+
+          <!-- Linha Q1 -->
+          <div class="circuit-wire-row">
+            <div class="wire-label">q₁: |0⟩</div>
+            <div class="wire-track" id="wireTrack1">
+              <div class="wire-line"></div>
+              <div class="gate-slot step-1-empty">
+                <!-- Vazio no passo 1 -->
+              </div>
+              <div class="gate-slot step-2-gate" id="cnotTargetSlot">
+                <span class="cnot-target-circle">⊕</span>
+              </div>
+              <div class="gate-slot step-3-gate" id="measure1Slot">
+                <span class="gate-box m-gate">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12a10 10 0 0 1 20 0"/><line x1="12" y1="12" x2="16" y2="6"/></svg>
+                </span>
+                <span class="gate-tooltip">Medidor M</span>
+              </div>
+            </div>
+            <div class="wire-output" id="outputWire1">Colapso: ?</div>
+          </div>
+        </div>
+
+        <!-- Barra de Progresso das Etapas -->
+        <div class="steps-progress-bar">
+          <div class="step-bullet active" id="bullet0" onclick="goToStep(0)">
+            <span class="b-num">0</span>
+            <span class="b-txt">Estado |00⟩</span>
+          </div>
+          <div class="step-connector" id="conn0"></div>
+          <div class="step-bullet" id="bullet1" onclick="goToStep(1)">
+            <span class="b-num">1</span>
+            <span class="b-txt">H em q₀</span>
+          </div>
+          <div class="step-connector" id="conn1"></div>
+          <div class="step-bullet" id="bullet2" onclick="goToStep(2)">
+            <span class="b-num">2</span>
+            <span class="b-txt">CNOT (Emaranha)</span>
+          </div>
+          <div class="step-connector" id="conn2"></div>
+          <div class="step-bullet" id="bullet3" onclick="goToStep(3)">
+            <span class="b-num">3</span>
+            <span class="b-txt">Medição (Shots)</span>
+          </div>
+        </div>
+
+        <!-- Controles de Execução do Circuito -->
+        <div class="circuit-actions-bar">
+          <button class="btn btn-outline btn-sm" id="btnPrevStep" onclick="stepCircuit(-1)">◀ Passo Anterior</button>
+          <button class="btn btn-primary" id="btnNextStep" onclick="stepCircuit(1)">Próximo Passo ▶</button>
+          <button class="btn btn-secondary btn-sm" id="btnAutoPlay" onclick="toggleAutoPlay()">▶ Auto Reproduzir</button>
+          <button class="btn btn-outline btn-sm" id="btnResetCircuit" onclick="resetCircuit()">↺ Reiniciar</button>
+        </div>
+
+        <!-- Painel de Resultados do Passo Atual -->
+        <div class="step-explanation-panel" id="stepExplanation">
+          <div class="step-badge-large" id="stepNumberBadge">Passo 0 de 3</div>
+          <h3 id="stepTitle">Estado Inicial: Dois qubits no estado fundamental |00⟩</h3>
+          <p id="stepDescription">
+            Nenhum operador quântico foi aplicado ainda. O sistema encontra-se 100% no estado computacional |00⟩.
+          </p>
+
+          <div class="state-math-grid">
+            <div class="math-box">
+              <span class="math-title">Vetor de Estado (4 Amplitudes):</span>
+              <div class="vector-latex" id="stateVectorLatex">
+                |ψ₀⟩ = 1.0000 |00⟩ + 0.0000 |01⟩ + 0.0000 |10⟩ + 0.0000 |11⟩
+              </div>
+            </div>
+            <div class="math-box">
+              <span class="math-title">Operação Matricial da Etapa:</span>
+              <div class="matrix-op-latex" id="stepMatrixLatex">
+                Identidade I₄ (Estado Puro Inicial)
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráfico de Amplitudes e Probabilidades Teóricas -->
+          <div class="theoretical-probs-wrapper">
+            <h4>Probabilidades Teóricas P = |amplitude|²</h4>
+            <div class="bars-4states-grid">
+              <div class="state-bar-card">
+                <span class="state-label">|00⟩</span>
+                <div class="vertical-bar-track">
+                  <div class="vertical-bar-fill cyan" id="thBar00" style="height: 100%;"></div>
+                </div>
+                <span class="state-pct" id="thPct00">100%</span>
+              </div>
+              <div class="state-bar-card">
+                <span class="state-label">|01⟩</span>
+                <div class="vertical-bar-track">
+                  <div class="vertical-bar-fill purple" id="thBar01" style="height: 0%;"></div>
+                </div>
+                <span class="state-pct" id="thPct01">0%</span>
+              </div>
+              <div class="state-bar-card">
+                <span class="state-label">|10⟩</span>
+                <div class="vertical-bar-track">
+                  <div class="vertical-bar-fill purple" id="thBar10" style="height: 0%;"></div>
+                </div>
+                <span class="state-pct" id="thPct10">0%</span>
+              </div>
+              <div class="state-bar-card">
+                <span class="state-label">|11⟩</span>
+                <div class="vertical-bar-track">
+                  <div class="vertical-bar-fill cyan" id="thBar11" style="height: 0%;"></div>
+                </div>
+                <span class="state-pct" id="thPct11">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Módulo de Execução de Shots (Medição Experimental) -->
+          <div class="shots-simulation-box" id="shotsBox">
+            <div class="shots-header">
+              <h4>Execução Experimental em Hardware / Simulador (Shots)</h4>
+              <div class="shots-selector">
+                <label for="shotsSelect">Número de Execuções (Shots):</label>
+                <select id="shotsSelect" class="quantum-select">
+                  <option value="100">100 shots</option>
+                  <option value="512">512 shots</option>
+                  <option value="1024" selected>1024 shots (Padrão do Trabalho)</option>
+                  <option value="4096">4096 shots</option>
+                  <option value="8192">8192 shots</option>
+                </select>
+                <button class="btn btn-primary btn-sm" id="btnRunShots" onclick="runShotsExperiment()">
+                  ⚡ Executar Medições
+                </button>
+              </div>
+            </div>
+
+            <!-- Histograma Experimental Animado -->
+            <div class="histogram-results" id="histogramResults">
+              <div class="hist-row">
+                <span class="hist-label">|00⟩</span>
+                <div class="hist-bar-container">
+                  <div class="hist-bar-fill" id="histFill00" style="width: 50.3%;"></div>
+                </div>
+                <span class="hist-count" id="histCount00">515 (50.3%)</span>
+              </div>
+              <div class="hist-row">
+                <span class="hist-label">|01⟩</span>
+                <div class="hist-bar-container">
+                  <div class="hist-bar-fill" id="histFill01" style="width: 0%;"></div>
+                </div>
+                <span class="hist-count" id="histCount01">0 (0.0%)</span>
+              </div>
+              <div class="hist-row">
+                <span class="hist-label">|10⟩</span>
+                <div class="hist-bar-container">
+                  <div class="hist-bar-fill" id="histFill10" style="width: 0%;"></div>
+                </div>
+                <span class="hist-count" id="histCount10">0 (0.0%)</span>
+              </div>
+              <div class="hist-row">
+                <span class="hist-label">|11⟩</span>
+                <div class="hist-bar-container">
+                  <div class="hist-bar-fill" id="histFill11" style="width: 49.7%;"></div>
+                </div>
+                <span class="hist-count" id="histCount11">509 (49.7%)</span>
+              </div>
+            </div>
+
+            <div class="shots-observation">
+              ✨ <strong>Conclusão da Medição:</strong>
+              Em todas as medições, os dois qubits <em>sempre concordam</em>: ou ambos resultam em 0, ou ambos resultam em 1!
+              Os estados contraditórios |01⟩ e |10⟩ têm probabilidade <strong>exatamente ZERO</strong>,
+              comprovando o emaranhamento quântico perfeito!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUALIZADOR DE CÓDIGO PYTHON (NUMPY) -->
+      <div class="python-code-showcase">
+        <div class="code-header">
+          <div class="code-title">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            simulador_quantico.py · Código Original do Grupo 4 (NumPy)
+          </div>
+          <button class="btn-copy-code" id="btnCopyCode" onclick="copyPythonCode()">
+            Copiar Código Python
+          </button>
+        </div>
+        <pre class="code-pre"><code class="code-content" id="pythonCodeBlock">import numpy as np
+
+# Portas quânticas (matrizes unitárias)
+I = np.array([[1, 0], [0, 1]], dtype=complex)
+H = (1 / np.sqrt(2)) * np.array([[1, 1], [1, -1]], dtype=complex)
+CNOT = np.array([[1, 0, 0, 0],
+                 [0, 1, 0, 0],
+                 [0, 0, 0, 1],
+                 [0, 0, 1, 0]], dtype=complex)
+
+# Estado inicial |00>
+psi = np.zeros(4, dtype=complex)
+psi[0] = 1
+
+# Passo 1: Hadamard no qubit 0 -> (H ⊗ I)
+psi = np.kron(H, I) @ psi
+
+# Passo 2: CNOT (controle q0, alvo q1) -> gera Estado de Bell
+psi = CNOT @ psi
+
+# Passo 3: Medição estocástica (Regra de Born: P = |amplitude|²)
+shots = 1024
+probs = np.abs(psi) ** 2
+resultados = np.random.choice(4, size=shots, p=probs)
+print(f"|00>: {np.sum(resultados == 0)} shots")
+print(f"|11>: {np.sum(resultados == 3)} shots")</code></pre>
+      </div>
+    </section>
+
+    <!-- 7. SANDBOX LIVRE DE CIRCUITOS QUÂNTICOS -->
+    <section id="laboratorio" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Experimentação Livre</span>
+        <h2 class="section-title">Laboratório Quântico (Sandbox)</h2>
+        <p class="section-description">
+          Monte seu próprio circuito de 2 qubits! Clique nas portas abaixo para adicioná-las aos slots das linhas quânticas
+          e observe a evolução do vetor de estado e do gráfico de probabilidades em tempo real.
+        </p>
+      </div>
+
+      <div class="sandbox-builder-card">
+        <!-- Paleta de Portas para Inserir -->
+        <div class="gates-palette">
+          <span class="palette-title">Portas Disponíveis (Clique para selecionar):</span>
+          <button class="palette-gate active" data-gate="H" onclick="selectPaletteGate('H')">H (Hadamard)</button>
+          <button class="palette-gate" data-gate="X" onclick="selectPaletteGate('X')">X (NOT)</button>
+          <button class="palette-gate" data-gate="Z" onclick="selectPaletteGate('Z')">Z (Phase)</button>
+          <button class="palette-gate" data-gate="CNOT" onclick="selectPaletteGate('CNOT')">CNOT</button>
+          <button class="palette-gate" data-gate="CLEAR" onclick="selectPaletteGate('CLEAR')">🧹 Limpar Slot</button>
+        </div>
+
+        <!-- Grade de Slots Editáveis -->
+        <div class="sandbox-circuit-grid">
+          <!-- Q0 -->
+          <div class="sb-wire-row">
+            <div class="sb-wire-name">q₀ |0⟩</div>
+            <div class="sb-slot" id="sb-slot-0-0" onclick="handleSandboxSlotClick(0, 0)"><span>H</span></div>
+            <div class="sb-slot" id="sb-slot-0-1" onclick="handleSandboxSlotClick(0, 1)"><span>●</span></div>
+            <div class="sb-slot" id="sb-slot-0-2" onclick="handleSandboxSlotClick(0, 2)"><span>vazio</span></div>
+          </div>
+          <!-- Q1 -->
+          <div class="sb-wire-row">
+            <div class="sb-wire-name">q₁ |0⟩</div>
+            <div class="sb-slot" id="sb-slot-1-0" onclick="handleSandboxSlotClick(1, 0)"><span>vazio</span></div>
+            <div class="sb-slot" id="sb-slot-1-1" onclick="handleSandboxSlotClick(1, 1)"><span>⊕</span></div>
+            <div class="sb-slot" id="sb-slot-1-2" onclick="handleSandboxSlotClick(1, 2)"><span>vazio</span></div>
+          </div>
+        </div>
+
+        <div class="sb-actions">
+          <button class="btn btn-outline btn-sm" onclick="loadSandboxPreset('bell')">Carregar Estado de Bell</button>
+          <button class="btn btn-outline btn-sm" onclick="loadSandboxPreset('superposition')">Superposição Simples (H em q0 e q1)</button>
+          <button class="btn btn-outline btn-sm" onclick="loadSandboxPreset('not')">Inversão Clássica (X em q0)</button>
+          <button class="btn btn-outline btn-sm" onclick="clearSandbox()">Limpar Tudo</button>
+        </div>
+
+        <!-- Resultados em Tempo Real -->
+        <div class="sb-live-output">
+          <div class="sb-vector-output">
+            <strong>Vetor Final Calculado:</strong>
+            <div id="sbVectorText">|ψ⟩ = 0.7071 |00⟩ + 0.7071 |11⟩</div>
+          </div>
+          <div class="sb-probs-output">
+            <div class="sb-prob-item"><span>|00⟩:</span><div class="sb-bar"><div id="sbProbBar00" style="width: 50%;"></div></div><strong id="sbProbTxt00">50%</strong></div>
+            <div class="sb-prob-item"><span>|01⟩:</span><div class="sb-bar"><div id="sbProbBar01" style="width: 0%;"></div></div><strong id="sbProbTxt01">0%</strong></div>
+            <div class="sb-prob-item"><span>|10⟩:</span><div class="sb-bar"><div id="sbProbBar10" style="width: 0%;"></div></div><strong id="sbProbTxt10">0%</strong></div>
+            <div class="sb-prob-item"><span>|11⟩:</span><div class="sb-bar"><div id="sbProbBar11" style="width: 50%;"></div></div><strong id="sbProbTxt11">50%</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. ARQUITETURA DE COMPUTADORES: CLÁSSICO VS QUÂNTICO -->
+    <section id="arquitetura" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Visão da Arquitetura</span>
+        <h2 class="section-title">Computação Clássica × Quântica</h2>
+        <p class="section-description">
+          Uma análise profunda sob a ótica de <strong>Arquitetura e Organização de Computadores</strong>:
+          como a representação da informação, os barramentos, a memória e os limites físicos diferem entre os dois mundos.
+        </p>
+      </div>
+
+      <!-- Tabela Comparativa Estilizada -->
+      <div class="comparison-table-wrapper">
+        <table class="quantum-table">
+          <thead>
+            <tr>
+              <th>Aspecto Arquitetural</th>
+              <th>Computador Clássico (Von Neumann)</th>
+              <th>Computador Quântico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unidade Básica</strong></td>
+              <td>Bit (0 ou 1 determinístico)</td>
+              <td>Qubit (α|0⟩ + β|1⟩ contínuo)</td>
+            </tr>
+            <tr>
+              <td><strong>Espaço de Estados com n Unidades</strong></td>
+              <td>1 valor discreto entre 2ⁿ</td>
+              <td><strong>2ⁿ amplitudes complexas simultâneas</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Portas e Operações Lógicas</strong></td>
+              <td>Booleanas irreversíveis (AND, OR, NAND) gerando calor</td>
+              <td>Matrizes Unitárias Reversíveis (H, X, CNOT, T) sem perda de informação</td>
+            </tr>
+            <tr>
+              <td><strong>Paralelismo</strong></td>
+              <td>Multithreading / Múltiplos Núcleos físicos adicionais</td>
+              <td>Paralelismo quântico inerente via superposição linear</td>
+            </tr>
+            <tr>
+              <td><strong>Cópia de Dados</strong></td>
+              <td>Trivial (instruções MOV / memcpy / registradores)</td>
+              <td><strong>Proibida</strong> pelo <em>Teorema da Não-Clonagem</em></td>
+            </tr>
+            <tr>
+              <td><strong>Leitura / Medição</strong></td>
+              <td>Não-destrutiva (tensão de porta de transistores)</td>
+              <td>Destrutiva (colapsa irreversivelmente a superposição)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Calculadora Interativa da Escala Exponencial -->
+      <div class="exponential-calculator-box">
+        <h3>Calculadora da Explosão Exponencial Quântica (2ⁿ)</h3>
+        <p>Veja quantos estados simultâneos um processador quântico manipula e a RAM clássica equivalente necessária para simular:</p>
+        
+        <div class="exp-calc-slider-row">
+          <label>Número de Qubits (n): <strong id="lblQubitCount">30 Qubits</strong></label>
+          <input type="range" id="qubitScaleSlider" min="2" max="64" value="30" class="quantum-slider">
+        </div>
+
+        <div class="exp-calc-metrics-grid">
+          <div class="metric-card">
+            <span class="m-label">Estados Simultâneos (2ⁿ)</span>
+            <span class="m-val highlight" id="mStatesVal">1.073.741.824</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">RAM Clássica Equivalente</span>
+            <span class="m-val" id="mRamVal">~16 Gigabytes</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">Comparação do Mundo Real</span>
+            <span class="m-val small" id="mRealWorldVal">Exige um computador desktop gamer de alta performance.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. HARDWARE, CRIOGENIA E DESAFIOS (NISQ) -->
+    <section id="hardware" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Engenharia e Desafios</span>
+        <h2 class="section-title">Hardware Físico, Criogenia & Ruído</h2>
+        <p class="section-description">
+          Por que não temos computadores quânticos em smartphones ou notebooks?
+          A física necessária para manter estados quânticos coerentes impõe desafios de engenharia extremos.
+        </p>
+      </div>
+
+      <div class="hardware-cards-grid">
+        <!-- Criostato -->
+        <div class="hw-card">
+          <div class="hw-card-icon">❄️</div>
+          <h3>Criogenia Extrema (~15 mK)</h3>
+          <p>
+            Processadores quânticos supercondutores operam a aproximadamente <strong>15 milikelvins (-273,13 °C)</strong>,
+            uma temperatura mais fria que o vácuo do espaço sideral! Isso é alcançado por meio de <em>refrigeradores de diluição de hélio-3 e hélio-4</em>,
+            eliminando o ruído térmico que destruiria a superposição.
+          </p>
+        </div>
+
+        <!-- Decoerência -->
+        <div class="hw-card">
+          <div class="hw-card-icon">⚡</div>
+          <h3>Decoerência Quântica & Ruído (NISQ)</h3>
+          <p>
+            Atualmente vivemos na era <strong>NISQ (Noisy Intermediate-Scale Quantum)</strong>.
+            Fótons espúrios, campos magnéticos e vibrações fazem com que o qubit perca seu estado quântico em microssegundos (tempo T₁ e T₂),
+            limitando a profundidade dos circuitos antes que erros se acumulem.
+          </p>
+        </div>
+
+        <!-- QEC -->
+        <div class="hw-card">
+          <div class="hw-card-icon">🛡️</div>
+          <h3>Correção de Erros Quânticos (QEC)</h3>
+          <p>
+            Como o Teorema da Não-Clonagem impede a cópia direta de bits para redundância,
+            a computação quântica utiliza <strong>códigos de superfície</strong> (Surface Codes).
+            Estima-se que sejam necessários de <strong>1.000 a 10.000 qubits físicos</strong> ruidosos
+            para compor <strong>1 único qubit lógico</strong> perfeito tolerante a falhas.
+          </p>
+        </div>
+
+        <!-- Principais Tecnologias -->
+        <div class="hw-card">
+          <div class="hw-card-icon">🔬</div>
+          <h3>Tecnologias de Qubits em Disputa</h3>
+          <ul class="hw-tech-list">
+            <li><strong>Supercondutores (Transmon):</strong> Usados por Google e IBM (circuitos LC com junções Josephson).</li>
+            <li><strong>Íons Aprisionados (Trapped Ions):</strong> Usados por IonQ e Quantinuum (átomos suspensos por campos eletromagnéticos).</li>
+            <li><strong>Fotônica:</strong> Usados por Xanadu e PsiQuantum (fótons de luz em temperatura ambiente).</li>
+            <li><strong>Átomos Neutros:</strong> Matrizes ópticas com pinças laser (QuEra).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. ALGORITMOS E APLICAÇÕES PRÁTICAS -->
+    <section id="algoritmos" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Onde Haverá Vantagem Quântica?</span>
+        <h2 class="section-title">Algoritmos Notáveis & Impacto Global</h2>
+        <p class="section-description">
+          O computador quântico não torna "tudo mais rápido". Sua vantagem reside em problemas matemáticos específicos
+          com estruturas de grupo periódicas ou simulações quânticas diretas.
+        </p>
+      </div>
+
+      <div class="algorithms-grid">
+        <!-- Shor -->
+        <div class="algo-card">
+          <div class="algo-header">
+            <span class="algo-tag red">Criptografia</span>
+            <h3>Algoritmo de Shor (1994)</h3>
+          </div>
+          <p>
+            Fatora números inteiros em tempo polinomial O((log N)³). A criptografia de chave pública atual (RSA, DSA, Curvas Elípticas)
+            baseia-se na dificuldade de fatorar números gigantes no computador clássico. Com um computador quântico tolerante a falhas,
+            chaves RSA de 2048 bits poderiam ser quebradas em poucas horas!
+          </p>
+          <div class="algo-footer">
+            <strong>Mitigação:</strong> Migração global para os padrões de Criptografia Pós-Quântica do NIST (FIPS 203, 204).
+          </div>
+        </div>
+
+        <!-- Grover -->
+        <div class="algo-card">
+          <div class="algo-header">
+            <span class="algo-tag cyan">Busca Não Estruturada</span>
+            <h3>Algoritmo de Grover (1996)</h3>
+          </div>
+          <p>
+            Encontra um item específico em uma lista não ordenada de N elementos em aproximadamente <strong>O(√N)</strong> passos,
+            em vez dos O(N) clássicos. Isso reduz a segurança efetiva do algoritmo AES-128 para equivalência de 64 bits,
+            exigindo a adoção de chaves AES-256 para manter a proteção quântica.
+          </p>
+          <div class="algo-footer">
+            <strong>Exemplo:</strong> Procurar entre 1.000.000 itens exige apenas ~1.000 testes quânticos!
+          </div>
+        </div>
+
+        <!-- Simulação Molecular -->
+        <div class="algo-card">
+          <div class="algo-header">
+            <span class="algo-tag emerald">Química & Materiais</span>
+            <h3>Simulação Molecular (Ideia de Feynman)</h3>
+          </div>
+          <p>
+            Simular moléculas complexas (como a enzima nitrogenase na fixação de nitrogênio para fertilizantes,
+            ou proteínas para novos medicamentos contra o câncer e Alzheimer) é intratável para supercomputadores clássicos.
+            Os computadores quânticos realizam essa simulação de forma nativa e precisa.
+          </p>
+          <div class="algo-footer">
+            <strong>Impacto:</strong> Baterias mais densas, supercondutores em temperatura ambiente e remédios sob medida.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. CONCLUSÃO E REFERÊNCIAS -->
+    <section id="conclusao" class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Considerações Finais</span>
+        <h2 class="section-title">Conclusão do Trabalho</h2>
+      </div>
+
+      <div class="conclusion-box">
+        <p>
+          A computação quântica não veio para substituir a computação clássica, mas para complementá-la como um coprocessador acelerador (QPU)
+          para classes de problemas que a arquitetura clássica jamais conseguirá solucionar em tempo útil.
+        </p>
+        <p>
+          Em nosso projeto prático, a simulação do <strong>Circuito de Bell</strong> comprovou os fenômenos centrais:
+          a porta Hadamard colocou o primeiro qubit em superposição (|0⟩ e |1⟩ igualmente prováveis),
+          e a porta CNOT entrelaçou os dois qubits. As medições estatísticas confirmaram que, embora cada qubit individualmente
+          seja 100% estocástico e imprevisível, os dois <em>sempre concordam</em>, evidenciando o emaranhamento quântico predito pela física.
+        </p>
+
+        <div class="team-credits">
+          <h3>Integrantes do Grupo 4</h3>
+          <div class="members-grid">
+            <div class="member-chip">Breno da Silva Neto Almeida Cunha</div>
+            <div class="member-chip">Guilherme Oliveira Fernandes da Silva</div>
+            <div class="member-chip">Matheus Felipe Perizzolo Colla</div>
+            <div class="member-chip">Pietro Wagenska Pereira</div>
+          </div>
+          <div class="institution-meta">
+            <strong>Disciplina:</strong> Arquitetura e Organização de Computadores · <strong>Docente:</strong> Prof. Felipe Cannarozzo Lourenço<br>
+            <strong>Curso:</strong> Tecnologia em Análise e Desenvolvimento de Sistemas (ADS) · Fatec · 2026
+          </div>
+        </div>
+
+        <div class="references-list">
+          <h4>Referências Bibliográficas</h4>
+          <ol>
+            <li><strong>NIELSEN, Michael A.; CHUANG, Isaac L.</strong> <em>Quantum Computation and Quantum Information</em>. 10th Anniversary Edition. Cambridge University Press, 2010.</li>
+            <li><strong>FEYNMAN, Richard P.</strong> Simulating physics with computers. <em>International Journal of Theoretical Physics</em>, v. 21, n. 6-7, p. 467-488, 1982.</li>
+            <li><strong>SHOR, Peter W.</strong> Algorithms for quantum computation: discrete logarithms and factoring. In: <em>35th Annual Symposium on Foundations of Computer Science</em>, IEEE, 1994.</li>
+            <li><strong>GROVER, Lov K.</strong> A fast mechanical algorithm for database search. In: <em>28th Annual ACM Symposium on Theory of Computing</em>, 1996.</li>
+            <li><strong>PRESKILL, John.</strong> Quantum computing in the NISQ era and beyond. <em>Quantum</em>, v. 2, p. 79, 2018.</li>
+            <li><strong>ARUTE, Frank et al.</strong> Quantum supremacy using a programmable superconducting processor. <em>Nature</em>, v. 574, p. 505-510, 2019.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <span class="footer-brand">QuantumCore Demonstrator</span>
+        <p>Desenvolvido para apresentação acadêmica de Arquitetura de Computadores (Fatec ADS · Grupo 4).</p>
+      </div>
+      <div class="footer-right">
+        <a href="#hero" class="btn-back-top">↑ Voltar ao Topo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
